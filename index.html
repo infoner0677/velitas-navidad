@@ -143,7 +143,17 @@ section{padding:70px 20px}
 .giftband .big{font-size:46px}
 @media(max-width:620px){.giftband{flex-direction:column;text-align:center}.giftband img{width:80%!important}}
 .giftband b{font-family:Fraunces,serif;font-size:22px;display:block}
-.add,.more{white-space:nowrap}
+.add,.cform{display:flex;flex-direction:column;gap:7px}
+.cform .ftitle{font-weight:800;color:var(--green);font-size:15px}
+.cform .two{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.fld{width:100%;border:1px solid #e3d3bc;border-radius:10px;padding:9px 10px;font:15px Nunito;background:#fff;color:var(--ink)}
+.fld:focus{outline:2px solid var(--gold);border-color:transparent}
+.fld.bad{border-color:var(--red);background:#fff4f4}
+.cform textarea{min-height:52px;resize:vertical}
+.ferr{display:none;color:var(--red);font-weight:800;font-size:13px}
+.ferr.show{display:block}
+.drawer .bottom{max-height:70vh;overflow:auto}
+.more{white-space:nowrap}
 .more{background:none;border:0;color:var(--green);font:800 14px Nunito;cursor:pointer;text-decoration:underline;padding:0}
 
 /* ---------- Tradition ---------- */
@@ -362,8 +372,25 @@ footer p{opacity:.85;margin:8px 0}
   <div class="items" id="items"></div>
   <div class="bottom">
     <div id="total"></div>
-    <label for="note" style="font-weight:700;font-size:14px">Nota (nombre, ciudad, fecha de entrega…)</label>
-    <textarea id="note" placeholder="Ej: Soy Ana, de Bogotá. Las necesito para el 6 de diciembre. Nombres para la caja personalizada: …"></textarea>
+    <div class="cform">
+      <div class="ftitle">📋 Tus datos para la entrega</div>
+      <input id="f-nombre" class="fld" placeholder="Nombre completo *" autocomplete="name">
+      <input id="f-tel" class="fld" type="tel" inputmode="tel" placeholder="Teléfono / celular *" autocomplete="tel">
+      <input id="f-dir" class="fld" placeholder="Dirección *" autocomplete="street-address">
+      <div class="two">
+        <input id="f-barrio" class="fld" placeholder="Barrio">
+        <input id="f-ciudad" class="fld" placeholder="Ciudad / municipio *" autocomplete="address-level2">
+      </div>
+      <div class="two">
+        <select id="f-entrega" class="fld" aria-label="Forma de entrega">
+          <option value="Domicilio">🛵 Domicilio</option>
+          <option value="Recoger en persona">🙋 Recoger en persona</option>
+        </select>
+        <input id="f-fecha" class="fld" placeholder="¿Para qué fecha?">
+      </div>
+      <textarea id="note" class="fld" placeholder="Nota (opcional): nombres o deseos para la caja personalizada, indicaciones de la casa, etc."></textarea>
+      <div class="ferr" id="ferr">Completa los campos con * para enviar tu pedido.</div>
+    </div>
     <div style="font-weight:800;font-size:14px;color:var(--green)">Enviar pedido por WhatsApp a:</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <a class="btn btn-wa sendWa" data-n="0" target="_blank" rel="noopener" style="justify-content:center;padding:12px 10px;font-size:15px">💬 310 798 9219</a>
@@ -550,8 +577,10 @@ function updateCart(){
   }
   $("#total").innerHTML = html;
   const note = $("#note").value.trim();
+  const F = id => $("#f-"+id).value.trim();
+  const datos = `\n\n📋 *Mis datos:*\n• Nombre: ${F("nombre")}\n• Teléfono: ${F("tel")}${F("dir")?`\n• Dirección: ${F("dir")}${F("barrio")?`, barrio ${F("barrio")}`:""}`:""}\n• Ciudad: ${F("ciudad")}\n• Entrega: ${F("entrega")}${F("fecha")?`\n• Fecha: ${F("fecha")}`:""}`;
   const summary = q.boxes ? `\nTotal: ${fmt(q.total)}${q.save?` (ahorro de ${fmt(q.save)})`:""}${q.gifts?`\nRegalo: ${q.gifts} portavelas`:""}` : "";
-  const msg = (`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${note?`\n\n${note}`:""}\n\n¡Gracias!`);
+  const msg = (`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${datos}${note?`\n\n📝 Nota: ${note}`:""}\n\n¡Gracias!`);
   document.querySelectorAll(".sendWa").forEach(a => a.href = waLink(msg, +a.dataset.n));
 }
 $("#items").addEventListener("click", e => {
@@ -559,7 +588,25 @@ $("#items").addEventListener("click", e => {
   const id = b.dataset.id; cart[id] = Math.max(0,(cart[id]||0)+Number(b.dataset.q));
   if(!cart[id]) delete cart[id]; save(); updateCart(); renderGrid();
 });
-$("#note").addEventListener("input", updateCart);
+/* Datos del cliente: se recuerdan en este navegador y son obligatorios para enviar */
+const FIELDS = ["nombre","tel","dir","barrio","ciudad","entrega","fecha"], REQ = ["nombre","tel","dir","ciudad"];
+try { const d = JSON.parse(localStorage.getItem("velitas-datos")||"{}"); FIELDS.forEach(k => { if(d[k]) $("#f-"+k).value = d[k]; }); } catch(_) {}
+function saveDatos(){ const d={}; FIELDS.forEach(k=>d[k]=$("#f-"+k).value); try{ localStorage.setItem("velitas-datos", JSON.stringify(d)); }catch(_){} }
+[...FIELDS.map(k=>"#f-"+k), "#note"].forEach(sel => $(sel).addEventListener("input", () => { $(sel).classList.remove("bad"); saveDatos(); updateCart(); }));
+$("#f-entrega").addEventListener("change", () => { const d=$("#f-entrega").value==="Domicilio"; $("#f-dir").placeholder = d ? "Dirección *" : "Dirección (opcional)"; if(!d) $("#f-dir").classList.remove("bad"); saveDatos(); updateCart(); });
+$("#f-entrega").dispatchEvent(new Event("change"));
+document.querySelectorAll(".sendWa").forEach(a => a.addEventListener("click", e => {
+  const req = $("#f-entrega").value==="Domicilio" ? REQ : REQ.filter(k=>k!=="dir");
+  const missing = req.filter(k => !$("#f-"+k).value.trim());
+  const empty = !Object.values(cart).some(q => q > 0);
+  if (missing.length || empty) {
+    e.preventDefault();
+    missing.forEach(k => $("#f-"+k).classList.add("bad"));
+    $("#ferr").textContent = empty ? "Agrega al menos un producto a tu pedido." : "Completa los campos con * para enviar tu pedido.";
+    $("#ferr").classList.add("show");
+    if (missing.length) $("#f-"+missing[0]).focus();
+  } else $("#ferr").classList.remove("show");
+}));
 function openCart(){ $("#drawer").classList.add("open"); $("#backdrop").classList.add("open"); }
 function closeCart(){ $("#drawer").classList.remove("open"); $("#backdrop").classList.remove("open"); }
 $("#openCart").onclick = openCart; $("#openCart2").onclick = openCart;
