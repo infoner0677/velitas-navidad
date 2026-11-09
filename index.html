@@ -153,6 +153,13 @@ section{padding:70px 20px}
 .ferr{display:none;color:var(--red);font-weight:800;font-size:13px}
 .ferr.show{display:block}
 .drawer .bottom{max-height:70vh;overflow:auto}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.4;color:var(--ink);cursor:pointer;padding:4px 2px;border-radius:8px}
+.consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--green)}
+.consent.bad{background:#fff4f4;outline:1px solid var(--red)}
+.consent a{color:var(--green);font-weight:800}
+.privsheet{grid-template-columns:1fr;max-width:640px}
+.privsheet h3{font-family:Fraunces,serif;color:var(--green);margin:0;font-size:26px}
+.privsheet p{margin:0;font-size:15px;color:var(--ink)}
 .more{white-space:nowrap}
 .more{background:none;border:0;color:var(--green);font:800 14px Nunito;cursor:pointer;text-decoration:underline;padding:0}
 
@@ -340,7 +347,7 @@ footer p{opacity:.85;margin:8px 0}
   <div class="logo">Velitas de los Deseos</div>
   <p>Que nunca falte la luz, la unión y el amor en tu hogar. ✨</p>
   <p>💬 Pedidos por WhatsApp: <a href="https://wa.me/573107989219">310 798 9219</a> · <a href="https://wa.me/573102396842">310 239 6842</a></p>
-  <p style="font-size:13px;opacity:.6">¡Feliz Navidad y próspero Año Nuevo!</p>
+  <p style="font-size:13px;opacity:.6">¡Feliz Navidad y próspero Año Nuevo! · <a href="#" class="openPriv">Aviso de privacidad</a></p>
 </footer>
 
 <!-- Modal -->
@@ -365,6 +372,23 @@ footer p{opacity:.85;margin:8px 0}
   </div>
 </div>
 
+<!-- Aviso de privacidad -->
+<div class="modal" id="priv" role="dialog" aria-modal="true" aria-labelledby="privTitle" style="z-index:100">
+  <div class="sheet privsheet">
+    <button class="x" id="privClose" aria-label="Cerrar">✕</button>
+    <div class="info">
+      <h3 id="privTitle">Aviso de privacidad</h3>
+      <p><b>Responsable:</b> Velitas de los Deseos. Contacto por WhatsApp: 310 798 9219 y 310 239 6842.</p>
+      <p><b>Qué datos pedimos:</b> nombre, teléfono, dirección, barrio, ciudad, forma y fecha de entrega, y la nota que quieras escribir.</p>
+      <p><b>Para qué los usamos:</b> únicamente para confirmar tu pedido, coordinar el pago y hacer la entrega. No los vendemos, no los compartimos con terceros y no te enviaremos publicidad sin tu permiso.</p>
+      <p><b>Cómo los recibimos:</b> esta página no guarda tus datos en ningún servidor. Viajan solo en el mensaje de WhatsApp que tú decides enviar. Para que no tengas que escribirlos de nuevo, se recuerdan únicamente en tu propio celular o computador; puedes borrarlos con el botón de abajo.</p>
+      <p><b>Tus derechos (Ley 1581 de 2012):</b> puedes conocer, actualizar, corregir o pedir que eliminemos tus datos, y retirar esta autorización cuando quieras, escribiéndonos por WhatsApp. También puedes acudir a la Superintendencia de Industria y Comercio.</p>
+      <p><b>Estadísticas de la página:</b> usamos Microsoft Clarity para saber, de forma anónima, cuántas personas visitan el catálogo y qué secciones les gustan más. No registra lo que escribes en los campos de tus datos.</p>
+      <div class="nav"><button class="btn btn-red" id="privOk">Entendido</button><button class="btn" style="background:#f3ead9" id="privForget">Borrar mis datos de este equipo</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- Cart -->
 <div class="backdrop" id="backdrop"></div>
 <aside class="drawer" id="drawer" aria-label="Mi pedido">
@@ -372,7 +396,7 @@ footer p{opacity:.85;margin:8px 0}
   <div class="items" id="items"></div>
   <div class="bottom">
     <div id="total"></div>
-    <div class="cform">
+    <div class="cform" data-clarity-mask="true">
       <div class="ftitle">📋 Tus datos para la entrega</div>
       <input id="f-nombre" class="fld" placeholder="Nombre completo *" autocomplete="name">
       <input id="f-tel" class="fld" type="tel" inputmode="tel" placeholder="Teléfono / celular *" autocomplete="tel">
@@ -389,6 +413,7 @@ footer p{opacity:.85;margin:8px 0}
         <input id="f-fecha" class="fld" placeholder="¿Para qué fecha?">
       </div>
       <textarea id="note" class="fld" placeholder="Nota (opcional): nombres o deseos para la caja personalizada, indicaciones de la casa, etc."></textarea>
+      <label class="consent" id="consentWrap"><input type="checkbox" id="consent"> <span>Autorizo a <b>Velitas de los Deseos</b> a usar mis datos solo para gestionar y entregar mi pedido, según el <a href="#" class="openPriv">Aviso de privacidad</a>. *</span></label>
       <div class="ferr" id="ferr">Completa los campos con * para enviar tu pedido.</div>
     </div>
     <div style="font-weight:800;font-size:14px;color:var(--green)">Enviar pedido por WhatsApp a:</div>
@@ -608,7 +633,7 @@ function updateCart(){
   const F = id => $("#f-"+id).value.trim();
   const datos = `\n\n📋 *Mis datos:*\n• Nombre: ${F("nombre")}\n• Teléfono: ${F("tel")}${F("dir")?`\n• Dirección: ${F("dir")}${F("barrio")?`, barrio ${F("barrio")}`:""}`:""}\n• Ciudad: ${F("ciudad")}\n• Entrega: ${F("entrega")}${F("fecha")?`\n• Fecha: ${F("fecha")}`:""}`;
   const summary = q.boxes ? `\nTotal: ${fmt(q.total)}${q.save?` (ahorro de ${fmt(q.save)})`:""}${q.gifts?`\nRegalo: ${q.gifts} portavelas`:""}` : "";
-  const msg = (`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${datos}${note?`\n\n📝 Nota: ${note}`:""}\n\n¡Gracias!`);
+  const msg = (`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${datos}${$("#consent").checked?"\n✅ Acepto el aviso de privacidad de Velitas de los Deseos.":""}${note?`\n\n📝 Nota: ${note}`:""}\n\n¡Gracias!`);
   document.querySelectorAll(".sendWa").forEach(a => a.href = waLink(msg, +a.dataset.n));
 }
 $("#items").addEventListener("click", e => {
@@ -627,15 +652,28 @@ document.querySelectorAll(".sendWa").forEach(a => a.addEventListener("click", e 
   const req = $("#f-entrega").value==="Domicilio" ? REQ : REQ.filter(k=>k!=="dir");
   const missing = req.filter(k => !$("#f-"+k).value.trim());
   const empty = !Object.values(cart).some(q => q > 0);
-  if (missing.length || empty) {
+  const noConsent = !$("#consent").checked;
+  if (missing.length || empty || noConsent) {
     e.preventDefault();
     missing.forEach(k => $("#f-"+k).classList.add("bad"));
-    $("#ferr").textContent = empty ? "Agrega al menos un producto a tu pedido." : "Completa los campos con * para enviar tu pedido.";
+    $("#consentWrap").classList.toggle("bad", noConsent);
+    $("#ferr").textContent = empty ? "Agrega al menos un producto a tu pedido." : missing.length ? "Completa los campos con * para enviar tu pedido." : "Marca la casilla de autorización de datos para enviar tu pedido.";
     $("#ferr").classList.add("show");
     if (missing.length) $("#f-"+missing[0]).focus();
-    track(empty ? "whatsapp_sin_productos" : "whatsapp_faltan_datos");
+    track(empty ? "whatsapp_sin_productos" : missing.length ? "whatsapp_faltan_datos" : "whatsapp_sin_autorizacion");
   } else { $("#ferr").classList.remove("show"); const q=quote(); track("whatsapp_pedido_enviado", {total:q.total, cajas:q.boxes}); track("whatsapp_pedido_numero_"+(+a.dataset.n+1)); }
 }));
+$("#consent").addEventListener("change", () => { $("#consentWrap").classList.remove("bad"); updateCart(); });
+function openPriv(e){ if(e) e.preventDefault(); $("#priv").classList.add("open"); track("ver_aviso_privacidad"); }
+function closePriv(){ $("#priv").classList.remove("open"); }
+document.querySelectorAll(".openPriv").forEach(a => a.addEventListener("click", openPriv));
+$("#privClose").onclick = closePriv; $("#privOk").onclick = closePriv;
+$("#priv").addEventListener("click", e => { if(e.target.id==="priv") closePriv(); });
+$("#privForget").onclick = () => {
+  try { localStorage.removeItem("velitas-datos"); } catch(_) {}
+  FIELDS.forEach(k => { if(k!=="entrega") $("#f-"+k).value = ""; }); $("#note").value = ""; $("#consent").checked = false;
+  updateCart(); closePriv(); toast("🗑️ Tus datos se borraron de este equipo");
+};
 function openCart(){ track("abrir_mi_pedido"); $("#drawer").classList.add("open"); $("#backdrop").classList.add("open"); }
 function closeCart(){ $("#drawer").classList.remove("open"); $("#backdrop").classList.remove("open"); }
 $("#openCart").onclick = openCart; $("#openCart2").onclick = openCart;
