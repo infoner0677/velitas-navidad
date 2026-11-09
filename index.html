@@ -406,6 +406,32 @@ footer p{opacity:.85;margin:8px 0}
    Ejemplo Colombia: "573001234567". Si lo dejas vacío, WhatsApp
    pedirá elegir el contacto al enviar. */
 const WHATSAPP = ["573107989219", "573102396842"];
+
+/* ============ ESTADÍSTICAS ============
+   Microsoft Clarity (gratis): visitas, mapas de calor, scroll y grabaciones.
+   Pega aquí el "Project ID" de clarity.microsoft.com (ej. "abc123xyz"). */
+const CLARITY_ID = "";
+/* Opcional: Google Analytics 4, pega el ID que empieza por "G-". */
+const GA_ID = "";
+
+(function(){
+  if (CLARITY_ID) {
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",CLARITY_ID);
+  }
+  if (GA_ID) {
+    const s=document.createElement("script"); s.async=true; s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID; document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[]; window.gtag=function(){dataLayer.push(arguments)}; gtag("js",new Date()); gtag("config",GA_ID);
+  }
+})();
+/* Registra una acción: aparece en Clarity como "Evento inteligente" y en GA4 como evento */
+function track(name, extra){
+  try {
+    if (window.clarity) { clarity("event", name); if (extra) for (const k in extra) clarity("set", k, String(extra[k])); }
+    if (window.gtag) gtag("event", name, extra||{});
+  } catch(_) {}
+}
 /* Precio por caja: escríbelo como texto, ej. "$35.000". Vacío = "Precio a consultar". */
 
 const CATS = {todas:"Todas", navidad:"🎄 Navideñas", fe:"🙏 Religiosas", colombia:"🇨🇴 Colombianas", elegante:"✨ Elegantes", portavelas:"🪵 Portavelas"};
@@ -507,7 +533,7 @@ function renderGrid(){
 }
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest("[data-f]"); if(!b) return;
-  filter = b.dataset.f; renderFilters(); renderGrid();
+  filter = b.dataset.f; renderFilters(); renderGrid(); track("filtro_"+filter);
 });
 $("#grid").addEventListener("click", e => {
   const o = e.target.closest("[data-open]"); if(o) return openModal(o.dataset.open);
@@ -517,6 +543,7 @@ $("#grid").addEventListener("click", e => {
 /* ---- Modal ---- */
 let current = 0;
 function openModal(id){
+  track("ver_detalle_"+id);
   current = PRODUCTS.findIndex(p => p.id===id);
   fillModal(); $("#modal").classList.add("open"); document.body.style.overflow="hidden";
 }
@@ -554,6 +581,7 @@ let cart = {};
 try { cart = JSON.parse(localStorage.getItem("velitas-cart")||"{}"); } catch(_) {}
 function save(){ try{ localStorage.setItem("velitas-cart", JSON.stringify(cart)); }catch(_){} }
 function addToCart(id){
+  track("agregar"); track("agregar_"+id, {producto:id});
   cart[id] = (cart[id]||0)+1; save(); updateCart(); renderGrid();
   toast(`✨ Caja «${PRODUCTS.find(p=>p.id===id).title}» agregada a tu pedido`);
 }
@@ -605,12 +633,14 @@ document.querySelectorAll(".sendWa").forEach(a => a.addEventListener("click", e 
     $("#ferr").textContent = empty ? "Agrega al menos un producto a tu pedido." : "Completa los campos con * para enviar tu pedido.";
     $("#ferr").classList.add("show");
     if (missing.length) $("#f-"+missing[0]).focus();
-  } else $("#ferr").classList.remove("show");
+    track(empty ? "whatsapp_sin_productos" : "whatsapp_faltan_datos");
+  } else { $("#ferr").classList.remove("show"); const q=quote(); track("whatsapp_pedido_enviado", {total:q.total, cajas:q.boxes}); track("whatsapp_pedido_numero_"+(+a.dataset.n+1)); }
 }));
-function openCart(){ $("#drawer").classList.add("open"); $("#backdrop").classList.add("open"); }
+function openCart(){ track("abrir_mi_pedido"); $("#drawer").classList.add("open"); $("#backdrop").classList.add("open"); }
 function closeCart(){ $("#drawer").classList.remove("open"); $("#backdrop").classList.remove("open"); }
 $("#openCart").onclick = openCart; $("#openCart2").onclick = openCart;
 $("#closeCart").onclick = closeCart; $("#backdrop").onclick = closeCart;
+document.querySelectorAll(".waDirect").forEach(a => a.addEventListener("click", () => track("whatsapp_contacto_numero_"+(+a.dataset.n+1))));
 document.querySelectorAll(".waDirect").forEach(a => a.href = waLink("¡Hola! 🎄 Vi el catálogo de velitas y quiero más información.", +a.dataset.n));
 
 let tt; function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2200); }
