@@ -110,13 +110,39 @@ section{padding:70px 20px}
 .card p{margin:0;color:var(--muted)}
 .wishes{display:flex;flex-wrap:wrap;gap:6px}
 .wishes span{background:#f6ecdc;color:#6b4b1f;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700}
-.card .foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:8px}
+.card .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:8px}
 .price{font-weight:800;color:var(--ink)}
 .price small{display:block;font-weight:600;color:var(--muted);font-size:12px}
 .add{background:var(--red);color:#fff;border:0;border-radius:999px;padding:10px 16px;font:800 14px Nunito;cursor:pointer;transition:.2s}
 .add:hover{background:var(--red-2)}
 .add.done{background:var(--green)}
 .custom{background:#e8f4ec;border:1px dashed #2f7a55;color:#14523d;border-radius:14px;padding:10px 12px;font-weight:700;font-size:14px}
+.tierTag{display:inline-block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:4px}
+.tierTag.relieve{background:#f6e3b8;color:#7a5410}.tierTag.sencilla{background:#e2efe7;color:#14523d}
+.price small{white-space:nowrap}
+#total .sum{display:flex;justify-content:space-between;align-items:baseline;font-family:Fraunces,serif;color:var(--green);font-size:18px}
+#total .sum b{font-size:26px}
+#total .saving{color:var(--red);font-weight:800}
+#total .gift{background:#fff4dc;border:1px dashed var(--gold);border-radius:12px;padding:8px 10px;font-weight:800;color:#7a5410;margin-top:6px}
+#total .nudge{font-size:14px;color:var(--muted);margin-top:6px}
+/* promos */
+.promos{background:linear-gradient(160deg,#2a0f08,#5b2a0e 60%,#2a0f08);color:#fff;position:relative;overflow:hidden}
+.promos::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 30%,rgba(255,190,90,.25),transparent 35%),radial-gradient(circle at 85% 70%,rgba(255,190,90,.2),transparent 40%)}
+.promos .wrap{position:relative}
+.promos .sec-title h2{color:#fff}.promos .sec-title p{color:#f2dcc0}.promos .sec-title .script{color:var(--gold-2)}
+.ptable{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.pcard{background:rgba(255,248,238,.06);border:1px solid rgba(243,212,138,.35);border-radius:var(--radius);padding:26px}
+.pcard h3{font-family:Fraunces,serif;margin:0 0 4px;font-size:24px;color:var(--gold-2)}
+.pcard .who{color:#f2dcc0;font-size:14px;margin-bottom:14px}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px dashed rgba(243,212,138,.3)}
+.prow span{font-weight:700}
+.prow b{font-family:Fraunces,serif;font-size:24px}
+.prow s{opacity:.55;font-size:14px;margin-right:8px}
+.prow.best b{color:var(--gold-2)}
+.giftband{margin-top:26px;display:flex;gap:18px;align-items:center;background:linear-gradient(90deg,var(--gold),var(--gold-2));color:#3a2608;border-radius:var(--radius);padding:20px 24px;box-shadow:0 14px 40px rgba(0,0,0,.3)}
+.giftband .big{font-size:46px}
+.giftband b{font-family:Fraunces,serif;font-size:22px;display:block}
+.add,.more{white-space:nowrap}
 .more{background:none;border:0;color:var(--green);font:800 14px Nunito;cursor:pointer;text-decoration:underline;padding:0}
 
 /* ---------- Tradition ---------- */
@@ -192,6 +218,7 @@ footer p{opacity:.85;margin:8px 0}
     <a class="logo" href="#inicio">Velitas de los Deseos</a>
     <nav>
       <a href="#catalogo">Catálogo</a>
+      <a href="#promos">Promociones</a>
       <a href="#tradicion">La tradición</a>
       <a href="#contacto">Pedidos</a>
     </nav>
@@ -206,7 +233,7 @@ footer p{opacity:.85;margin:8px 0}
   <p class="lead">Cajas de 10 velitas decoradas una a una, cada una con un deseo: <b>salud, amor, familia, prosperidad…</b> Para encenderlas juntos y llenar la casa de luz, unión y esperanza. <span class="flame"></span></p>
   <div class="ctas">
     <a class="btn btn-gold" href="#catalogo">✨ Ver el catálogo</a>
-    <a class="btn btn-ghost" href="#tradicion">¿Cómo se usan?</a>
+    <a class="btn btn-ghost" href="#promos">🎁 Ver promociones</a>
   </div>
   <svg class="wave" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path fill="#fff8ee" d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,70 L0,70 Z"/></svg>
 </section>
@@ -251,6 +278,37 @@ footer p{opacity:.85;margin:8px 0}
       <div class="step reveal"><div class="num">03</div><h4>Enciéndela con fe</h4><p>Al prenderla, di tu deseo en voz alta o en tu corazón, y agradece por el año vivido.</p></div>
       <div class="step reveal"><div class="num">04</div><h4>Deja que brille</h4><p>Ubícalas en un lugar seguro, lejos de cortinas y del alcance de los niños, y nunca las dejes solas.</p></div>
     </div>
+  </div>
+</section>
+
+<section class="promos" id="promos">
+  <div class="wrap">
+    <div class="sec-title reveal">
+      <div class="script">Promociones de Navidad</div>
+      <h2>Entre más luz, más ahorro</h2>
+      <p>Lleva una caja para cada hogar de tu familia y aprovecha estos precios especiales.</p>
+    </div>
+    <div class="ptable">
+      <div class="pcard reveal">
+        <h3>Cajas sencillas</h3>
+        <div class="who">Pesebre · Arcoíris · Orgullo Colombiano</div>
+        <div class="prow"><span>1 caja</span><b>$25.000</b></div>
+        <div class="prow"><span>2 cajas</span><b><s>$50.000</s>$45.000</b></div>
+        <div class="prow best"><span>3 cajas + 🎁</span><b><s>$75.000</s>$70.000</b></div>
+      </div>
+      <div class="pcard reveal">
+        <h3>Cajas con relieve</h3>
+        <div class="who">Duendes · Virgen Dorada · Deseos Blanco y Oro</div>
+        <div class="prow"><span>1 caja</span><b>$28.000</b></div>
+        <div class="prow"><span>2 cajas</span><b><s>$56.000</s>$53.000</b></div>
+        <div class="prow best"><span>3 cajas + 🎁</span><b><s>$84.000</s>$80.000</b></div>
+      </div>
+    </div>
+    <div class="giftband reveal">
+      <div class="big">🕯️</div>
+      <div><b>¡Si compras 3 cajas, te regalamos un portavelas de madera!</b>Para encender tus 10 deseos juntos, en fila y con seguridad.</div>
+    </div>
+    <p class="reveal" style="text-align:center;margin-top:22px"><a class="btn btn-gold" href="#catalogo">✨ Elegir mis cajas</a></p>
   </div>
 </section>
 
@@ -300,7 +358,7 @@ footer p{opacity:.85;margin:8px 0}
   <header><h3>🎁 Mi pedido</h3><button id="closeCart" aria-label="Cerrar">✕</button></header>
   <div class="items" id="items"></div>
   <div class="bottom">
-    <div id="total" style="font:800 20px Fraunces,serif;color:var(--green)"></div>
+    <div id="total"></div>
     <label for="note" style="font-weight:700;font-size:14px">Nota (nombre, ciudad, fecha de entrega…)</label>
     <textarea id="note" placeholder="Ej: Soy Ana, de Bogotá. Las necesito para el 6 de diciembre. Nombres para la caja personalizada: …"></textarea>
     <a class="btn btn-wa" id="sendWa" target="_blank" rel="noopener" style="justify-content:center">💬 Enviar pedido por WhatsApp</a>
@@ -322,39 +380,57 @@ const PRODUCTS = [
   {id:"duendes-rojo", cat:["navidad"], tone:"red", badge:"Favorita", badgeCls:"",
    title:"Duendes de Navidad · Clásica", tag:"Alegría para toda la familia",
    desc:"Velitas blancas con duendes, renos, Papá Noel y muñeco de nieve, base de brillo rojo. Perfectas para que los niños escojan su deseo.",
-   wishes:["Salud","Empleo","Familia","Viajes","Gratitud","Amor","Alegría","Sabiduría","Éxitos","Prosperidad"], price:"$28.000"},
+   wishes:["Salud","Empleo","Familia","Viajes","Gratitud","Amor","Alegría","Sabiduría","Éxitos","Prosperidad"], price:"$28.000", tier:"relieve"},
   {id:"duendes-pastel", cat:["navidad"], tone:"lilac", badge:"Nueva", badgeCls:"green",
    title:"Duendes de Navidad · Pastel", tag:"Dulce como la Navidad",
    desc:"Los mismos duendes traviesos sobre velitas en tonos pastel —lila, rosa, menta, celeste y limón— con base de brillo plateado.",
-   wishes:["Salud","Prosperidad","Gratitud","Alegría","Viajes","Empleo","Amor","Familia","Sabiduría","Éxitos"], price:"$28.000"},
+   wishes:["Salud","Prosperidad","Gratitud","Alegría","Viajes","Empleo","Amor","Familia","Sabiduría","Éxitos"], price:"$28.000", tier:"relieve"},
   {id:"pesebre", cat:["navidad","fe"], tone:"green", badge:"Pesebre", badgeCls:"gold",
    title:"Nacimiento · Pesebre", tag:"El verdadero sentido",
    desc:"La Virgen, San José, el Niño, los Reyes Magos, los angelitos, el burrito y el buey, sobre franjas de color y base dorada.",
-   wishes:["Viajes","Dinero","Éxitos","Salud","Prosperidad","Felicidad","Abundancia","Amor","Amistad","Sabiduría"], price:"$25.000"},
+   wishes:["Viajes","Dinero","Éxitos","Salud","Prosperidad","Felicidad","Abundancia","Amor","Amistad","Sabiduría"], price:"$25.000", tier:"sencilla"},
   {id:"virgen-dorada", cat:["fe"], tone:"blue", badge:"7 de diciembre", badgeCls:"gold",
    title:"Virgen Inmaculada · Dorada", tag:"Madre, ilumina nuestro hogar",
    desc:"Ideal para la Noche de las Velitas: la Virgen Inmaculada con frases de fe en letras doradas y base de brillo dorado.",
-   wishes:["Sueños","Madre nuestra, guíanos","Éxitos","Unión","Madre santa, ruega por nosotros","Trabajo","Salud","Gracias por las bendiciones","…y más frases de fe"], price:"$28.000"},
+   wishes:["Sueños","Madre nuestra, guíanos","Éxitos","Unión","Madre santa, ruega por nosotros","Trabajo","Salud","Gracias por las bendiciones","…y más frases de fe"], price:"$28.000", tier:"relieve"},
   {id:"virgenes-arcoiris", cat:["fe"], tone:"blue", badge:"✍️ Personalizable", badgeCls:"green", custom:true,
    title:"Advocaciones de la Virgen · Arcoíris", tag:"Diez Marías, diez colores",
    desc:"Cada velita con una advocación distinta de la Virgen (Fátima, Milagrosa, Guadalupe, del Carmen y más) sobre una franja de color y base de brillo turquesa. <b>¡Personalízala a tu gusto!</b>",
-   wishes:[], price:"$25.000"},
+   wishes:[], price:"$25.000", tier:"sencilla"},
   {id:"deseos-blanco", cat:["elegante"], tone:"", badge:"Elegante", badgeCls:"gold",
    title:"Deseos · Blanco y Oro", tag:"Sencilla y elegante",
    desc:"Caligrafía dorada, copos de nieve y base plateada. Una caja sobria y fina, perfecta para regalar a la abuela, al jefe o a esa persona especial.",
-   wishes:["Fe","Familia","Salud","Gratitud","Amor","Prosperidad","Dinero","Lealtad","Abundancia","Viajes"], price:"$28.000"},
+   wishes:["Fe","Familia","Salud","Gratitud","Amor","Prosperidad","Dinero","Lealtad","Abundancia","Viajes"], price:"$28.000", tier:"relieve"},
   {id:"colombia-pastel", cat:["colombia"], tone:"green", badge:"¡Qué chimba!", badgeCls:"",
    title:"Orgullo Colombiano · Pastel", tag:"Pa' los parceros",
    desc:"Frases bien nuestras rodeadas de chiva, arepa, tinto, bandeja paisa, la bandera y más. Velitas pastel con base dorada: un regalo que saca sonrisas.",
-   wishes:["Qué chimba ser colombiano","Pa' no dar papaya el próximo año","Por el trabajito","Por los tres golpes diarios","Por los de acá y los de allá","Por la familia","Pa' la visa y que no me jodan","Por los parceros","Por un año chimbita","Pa' volver a la tierrita"], price:"$25.000"},
+   wishes:["Qué chimba ser colombiano","Pa' no dar papaya el próximo año","Por el trabajito","Por los tres golpes diarios","Por los de acá y los de allá","Por la familia","Pa' la visa y que no me jodan","Por los parceros","Por un año chimbita","Pa' volver a la tierrita"], price:"$25.000", tier:"sencilla"},
   {id:"colombia-blanco", cat:["colombia"], tone:"", badge:"Ideal para el exterior", badgeCls:"green",
    title:"Orgullo Colombiano · Blanca", tag:"Para los que están lejos",
    desc:"Las mismas frases criollas sobre velitas blancas con base de brillo plateado. Perfecta para enviar a la familia que vive fuera del país.",
-   wishes:["Por los parceros","Por la familia","Por un año chimbita","Pa' volver a la tierrita","Por el trabajito","Pa' la visa y que no me jodan","Por los de acá y los de allá","Por los tres golpes diarios","Pa' no dar papaya el próximo año","Qué chimba ser colombiano"], price:"$25.000"},
+   wishes:["Por los parceros","Por la familia","Por un año chimbita","Pa' volver a la tierrita","Por el trabajito","Pa' la visa y que no me jodan","Por los de acá y los de allá","Por los tres golpes diarios","Pa' no dar papaya el próximo año","Qué chimba ser colombiano"], price:"$25.000", tier:"sencilla"},
 ];
 
+/* Precios por tipo de caja y promociones (1, 2 y 3 cajas) */
+const TIERS = {
+  sencilla: {name:"Sencilla",    1:25000, 2:45000, 3:70000},
+  relieve:  {name:"Con relieve", 1:28000, 2:53000, 3:80000},
+};
+const fmt = n => "$" + n.toLocaleString("es-CO");
+/* Mejor precio para n cajas del mismo tipo combinando paquetes de 3, 2 y 1 */
+function bestPrice(t, n){
+  const c=[0]; for(let i=1;i<=n;i++){ c[i]=c[i-1]+t[1]; if(i>=2)c[i]=Math.min(c[i],c[i-2]+t[2]); if(i>=3)c[i]=Math.min(c[i],c[i-3]+t[3]); }
+  return c[n];
+}
+function quote(){
+  const by={sencilla:0,relieve:0}; let boxes=0;
+  for(const [id,q] of Object.entries(cart)){ const p=PRODUCTS.find(x=>x.id===id); if(p&&q>0){ by[p.tier]+=q; boxes+=q; } }
+  let total=0, normal=0;
+  for(const k in by){ total+=bestPrice(TIERS[k],by[k]); normal+=TIERS[k][1]*by[k]; }
+  return {by, boxes, total, save:normal-total, gifts:Math.floor(boxes/3)};
+}
 const $ = s => document.querySelector(s);
-const priceText = p => p ? `${p}<small>caja x 10 velitas</small>` : `Precio a consultar<small>caja x 10 velitas</small>`;
+const priceText = (p, tier) => p ? `${p} <span class="tierTag ${tier}">${TIERS[tier].name}</span><small>2 por ${fmt(TIERS[tier][2])} · 3 por ${fmt(TIERS[tier][3])} 🎁</small>` : `Precio a consultar<small>caja x 10 velitas</small>`;
 const waLink = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
 
 /* ---- Filters & grid ---- */
@@ -376,7 +452,7 @@ function renderGrid(){
         ${p.custom?`<div class="custom">✍️ Tú eliges qué dice cada velita: nombres de tu familia o los deseos que quieras.</div>`:""}
         ${p.wishes.length?`<div class="wishes">${p.wishes.slice(0,6).map(w=>`<span>${w}</span>`).join("")}${p.wishes.length>6?`<span>+${p.wishes.length-6}</span>`:""}</div>`:""}
         <div class="foot">
-          <div class="price">${priceText(p.price)}</div>
+          <div class="price">${priceText(p.price, p.tier)}</div>
           <div style="display:flex;gap:12px;align-items:center">
             <button class="more" data-open="${p.id}">Ver más</button>
             <button class="add ${cart[p.id]?'done':''}" data-add="${p.id}">${cart[p.id]?'✓ En tu pedido':'🎁 Agregar'}</button>
@@ -409,7 +485,7 @@ function fillModal(){
   $("#mCustom").style.display = p.custom ? "" : "none";
   $("#mListWrap").style.display = p.wishes.length ? "" : "none";
   $("#mList").innerHTML = p.wishes.map(w=>`<li>${w}</li>`).join("");
-  $("#mPrice").innerHTML = priceText(p.price);
+  $("#mPrice").innerHTML = priceText(p.price, p.tier);
   $("#mAdd").textContent = cart[p.id] ? "✓ Agregar otra caja" : "🎁 Agregar a mi pedido";
 }
 function closeModal(){ $("#modal").classList.remove("open"); document.body.style.overflow=""; }
@@ -446,11 +522,20 @@ function updateCart(){
     return `<div class="item"><img src="img/${id}.webp" alt=""><div><b>${p.title}</b><div class="hint">caja x 10 velitas</div></div>
       <div class="qty"><button data-q="-1" data-id="${id}" aria-label="Quitar">−</button><b>${cart[id]}</b><button data-q="1" data-id="${id}" aria-label="Sumar">+</button></div></div>`;
   }).join("") : `<div class="empty">🕯️<br>Tu pedido está vacío.<br>Elige tus cajas favoritas en el catálogo.</div>`;
-  const lines = ids.map(id => { const p=PRODUCTS.find(x=>x.id===id); return `• ${cart[id]} × ${p.title}${p.price?` (${p.price} c/u)`:""}${p.custom?" — personalizada, te envío los nombres/deseos":""}`; }).join("\n");
-  const total = ids.reduce((t,id)=>{const p=PRODUCTS.find(x=>x.id===id); return t+(parseInt((p.price||"0").replace(/\D/g,""))||0)*cart[id];},0);
-  $("#total").textContent = total ? `Total: $${total.toLocaleString("es-CO")}` : "";
+  const lines = ids.map(id => { const p=PRODUCTS.find(x=>x.id===id); return `• ${cart[id]} × ${p.title} (${TIERS[p.tier].name})${p.custom?" — personalizada, te envío los nombres/deseos":""}`; }).join("\n");
+  const q = quote();
+  let html = "";
+  if(q.boxes){
+    html += `<div class="sum"><span>Total</span><b>${fmt(q.total)}</b></div>`;
+    if(q.save) html += `<div class="saving">🎉 Ahorras ${fmt(q.save)} con la promoción</div>`;
+    if(q.gifts) html += `<div class="gift">🕯️ + ${q.gifts} portavelas de madera de regalo</div>`;
+    const left = 3 - (q.boxes % 3);
+    if(left===1 || left===2) html += `<div class="nudge">Agrega ${left} caja${left>1?"s":""} más y te regalamos ${q.gifts?"otro":"un"} portavelas ✨</div>`;
+  }
+  $("#total").innerHTML = html;
   const note = $("#note").value.trim();
-  $("#sendWa").href = waLink(`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${total?`\nTotal: $${total.toLocaleString("es-CO")}`:""}${note?`\n\n${note}`:""}\n\n¡Gracias!`);
+  const summary = q.boxes ? `\nTotal: ${fmt(q.total)}${q.save?` (ahorro de ${fmt(q.save)})`:""}${q.gifts?`\nRegalo: ${q.gifts} portavelas`:""}` : "";
+  $("#sendWa").href = waLink(`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${note?`\n\n${note}`:""}\n\n¡Gracias!`);
 }
 $("#items").addEventListener("click", e => {
   const b = e.target.closest("[data-q]"); if(!b) return;
