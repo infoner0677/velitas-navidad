@@ -319,7 +319,8 @@ footer p{opacity:.85;margin:8px 0}
     <p>Agrega tus cajas favoritas a <b>“Mi pedido”</b> y envíanos la lista por WhatsApp. ¡Te respondemos con disponibilidad y precio!</p>
     <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-red" id="openCart2">🎁 Ver mi pedido</button>
-      <a class="btn btn-wa" id="waDirect" target="_blank" rel="noopener">💬 Escríbenos por WhatsApp</a>
+      <a class="btn btn-wa waDirect" data-n="0" target="_blank" rel="noopener">💬 WhatsApp 310 798 9219</a>
+      <a class="btn btn-wa waDirect" data-n="1" target="_blank" rel="noopener">💬 WhatsApp 310 239 6842</a>
     </div>
   </div>
 </section>
@@ -327,6 +328,7 @@ footer p{opacity:.85;margin:8px 0}
 <footer>
   <div class="logo">Velitas de los Deseos</div>
   <p>Que nunca falte la luz, la unión y el amor en tu hogar. ✨</p>
+  <p>💬 Pedidos por WhatsApp: <a href="https://wa.me/573107989219">310 798 9219</a> · <a href="https://wa.me/573102396842">310 239 6842</a></p>
   <p style="font-size:13px;opacity:.6">¡Feliz Navidad y próspero Año Nuevo!</p>
 </footer>
 
@@ -361,7 +363,11 @@ footer p{opacity:.85;margin:8px 0}
     <div id="total"></div>
     <label for="note" style="font-weight:700;font-size:14px">Nota (nombre, ciudad, fecha de entrega…)</label>
     <textarea id="note" placeholder="Ej: Soy Ana, de Bogotá. Las necesito para el 6 de diciembre. Nombres para la caja personalizada: …"></textarea>
-    <a class="btn btn-wa" id="sendWa" target="_blank" rel="noopener" style="justify-content:center">💬 Enviar pedido por WhatsApp</a>
+    <div style="font-weight:800;font-size:14px;color:var(--green)">Enviar pedido por WhatsApp a:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <a class="btn btn-wa sendWa" data-n="0" target="_blank" rel="noopener" style="justify-content:center;padding:12px 10px;font-size:15px">💬 310 798 9219</a>
+      <a class="btn btn-wa sendWa" data-n="1" target="_blank" rel="noopener" style="justify-content:center;padding:12px 10px;font-size:15px">💬 310 239 6842</a>
+    </div>
   </div>
 </aside>
 <div class="toast" id="toast"></div>
@@ -371,7 +377,7 @@ footer p{opacity:.85;margin:8px 0}
    Escribe aquí tu número de WhatsApp con indicativo, sin + ni espacios.
    Ejemplo Colombia: "573001234567". Si lo dejas vacío, WhatsApp
    pedirá elegir el contacto al enviar. */
-const WHATSAPP = "";
+const WHATSAPP = ["573107989219", "573102396842"];
 /* Precio por caja: escríbelo como texto, ej. "$35.000". Vacío = "Precio a consultar". */
 
 const CATS = {todas:"Todas", navidad:"🎄 Navideñas", fe:"🙏 Religiosas", colombia:"🇨🇴 Colombianas", elegante:"✨ Elegantes"};
@@ -431,7 +437,7 @@ function quote(){
 }
 const $ = s => document.querySelector(s);
 const priceText = (p, tier) => p ? `${p} <span class="tierTag ${tier}">${TIERS[tier].name}</span><small>2 por ${fmt(TIERS[tier][2])} · 3 por ${fmt(TIERS[tier][3])} 🎁</small>` : `Precio a consultar<small>caja x 10 velitas</small>`;
-const waLink = text => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+const waLink = (text, n=0) => `https://wa.me/${WHATSAPP[n]}?text=${encodeURIComponent(text)}`;
 
 /* ---- Filters & grid ---- */
 let filter = "todas";
@@ -535,7 +541,8 @@ function updateCart(){
   $("#total").innerHTML = html;
   const note = $("#note").value.trim();
   const summary = q.boxes ? `\nTotal: ${fmt(q.total)}${q.save?` (ahorro de ${fmt(q.save)})`:""}${q.gifts?`\nRegalo: ${q.gifts} portavelas`:""}` : "";
-  $("#sendWa").href = waLink(`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${note?`\n\n${note}`:""}\n\n¡Gracias!`);
+  const msg = (`¡Hola! 🎄 Quiero hacer este pedido de velitas:\n${lines || "(aún no he elegido)"}${summary}${note?`\n\n${note}`:""}\n\n¡Gracias!`);
+  document.querySelectorAll(".sendWa").forEach(a => a.href = waLink(msg, +a.dataset.n));
 }
 $("#items").addEventListener("click", e => {
   const b = e.target.closest("[data-q]"); if(!b) return;
@@ -547,7 +554,7 @@ function openCart(){ $("#drawer").classList.add("open"); $("#backdrop").classLis
 function closeCart(){ $("#drawer").classList.remove("open"); $("#backdrop").classList.remove("open"); }
 $("#openCart").onclick = openCart; $("#openCart2").onclick = openCart;
 $("#closeCart").onclick = closeCart; $("#backdrop").onclick = closeCart;
-$("#waDirect").href = waLink("¡Hola! 🎄 Vi el catálogo de velitas y quiero más información.");
+document.querySelectorAll(".waDirect").forEach(a => a.href = waLink("¡Hola! 🎄 Vi el catálogo de velitas y quiero más información.", +a.dataset.n));
 
 let tt; function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2200); }
 
